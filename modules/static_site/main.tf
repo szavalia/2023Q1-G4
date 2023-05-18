@@ -1,5 +1,3 @@
-# TODO: policies. In particular, cloudfront policy for www
-
 module "logs" {
     source = "terraform-aws-modules/s3-bucket/aws"
     bucket_prefix = local.logs_bucket
@@ -12,13 +10,16 @@ module "logs" {
 
     control_object_ownership = true
     object_ownership         = "ObjectWriter"
+    # TODO: maybe encrypt
 
 }
 
 module "www" {
     source = "terraform-aws-modules/s3-bucket/aws"
     #FIXME maybe move this to locals
-    bucket_prefix = "www${var.bucket_name}"
+    bucket_prefix = "www.${var.bucket_name}"
+    policy = data.aws_iam_policy_document.www.json
+
     acl    = "private"
     control_object_ownership = true
     object_ownership         = "ObjectWriter"
@@ -28,12 +29,10 @@ module "www" {
     restrict_public_buckets = true
 
     website = {
-        // redirect to bucket below
         redirect_all_requests_to = {
             host_name = module.static_site.s3_bucket_website_endpoint
         }
     }
-    
 }
 
 module "static_site" {
@@ -52,7 +51,7 @@ module "static_site" {
         target_prefix = "log/"
     }
 
-     website = {
+    website = {
         index_document = "index.html"
         error_document = "error.html"
     }
