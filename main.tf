@@ -8,14 +8,28 @@ module "api-gw" {
   lambda_func_name = "example-lambda"
 }
 
-module "web_site" {
-  source      = "./modules/static_site"
-  bucket_name = "cloud-2023-1q-g4"
+# TODO: decidir entre esto y origin access control
+resource "aws_cloudfront_origin_access_identity" "this" {
+    comment = "OAI for ${var.static_site}"
 }
+
+#resource "aws_cloudfront_origin_access_control" "this" {
+#  name                              = "S3 Access Control"
+#  origin_access_control_origin_type = "s3"
+#  signing_behavior                  = "always"
+#  signing_protocol                  = "sigv4"
+#}
 
 module "cdn" {
   source      = "./modules/cdn"
   static_site = module.web_site.domain_name
+  OAI = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
+}
+
+module "web_site" {
+  source      = "./modules/static_site"
+  bucket_name = "cloud-2023-1q-g4"
+  www_bucket_access = [aws_cloudfront_origin_access_identity.this.iam_arn]
 }
 
 resource "aws_s3_object" "data" {
