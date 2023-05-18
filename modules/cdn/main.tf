@@ -1,4 +1,4 @@
-# TODO: Solo cloudfront puede acceder a S3
+# TODO: Chequear que cloudfront puede acceder a S3
 resource "aws_cloudfront_distribution" "this" {
     enabled = true
     retain_on_delete = true # Esto va a hacer que se deshabilite cuando haces terraform destroy
@@ -23,7 +23,7 @@ resource "aws_cloudfront_distribution" "this" {
         cached_methods   = ["GET", "HEAD"]
         target_origin_id = var.static_site
 
-        cache_policy_id = data.aws_cloudfront_cached_policy.caching_optimized.id
+        cache_policy_id = data.aws_cloudfront_cache_policy.caching_optimized.id
 
         viewer_protocol_policy = "allow-all" # TODO: capaz cambiar a https-only
 

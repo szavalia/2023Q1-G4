@@ -10,7 +10,7 @@ module "api-gw" {
 
 # TODO: decidir entre esto y origin access control
 resource "aws_cloudfront_origin_access_identity" "this" {
-    comment = "OAI for ${var.static_site}"
+  comment = "OAI for the static site"
 }
 
 #resource "aws_cloudfront_origin_access_control" "this" {
@@ -23,12 +23,12 @@ resource "aws_cloudfront_origin_access_identity" "this" {
 module "cdn" {
   source      = "./modules/cdn"
   static_site = module.web_site.domain_name
-  OAI = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
+  OAI         = aws_cloudfront_origin_access_identity.this.cloudfront_access_identity_path
 }
 
 module "web_site" {
-  source      = "./modules/static_site"
-  bucket_name = "cloud-2023-1q-g4"
+  source            = "./modules/static_site"
+  bucket_name       = "cloud-2023-1q-g4"
   www_bucket_access = [aws_cloudfront_origin_access_identity.this.iam_arn]
 }
 
