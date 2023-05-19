@@ -4,7 +4,7 @@ variable "bucket_name" {
   type        = string
 }
 
-variable "www_bucket_access" {
+variable "bucket_access" {
   description = "Authorized bucket accessors"
   type        = list(string)
 }

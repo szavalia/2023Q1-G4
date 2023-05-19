@@ -10,11 +10,14 @@ module "api_gw" {
 }
 */
 
-# TODO: decidir entre esto y origin access control
 resource "aws_cloudfront_origin_access_identity" "this" {
   comment = "OAI for the static site"
 }
 
+/*
+Esta seria la manera correcta (updateada de OAI) de dar permisos para acceder a S3,
+por cuestión de tiempos y pruebas decidimos quedarnos con OAI
+*/
 #resource "aws_cloudfront_origin_access_control" "this" {
 #  name                              = "S3 Access Control"
 #  origin_access_control_origin_type = "s3"
@@ -45,16 +48,15 @@ module "cdn" {
 module "web_site" {
   source            = "./modules/static_site"
   bucket_name       = "cloud-2023-1q-g4"
-  www_bucket_access = [aws_cloudfront_origin_access_identity.this.iam_arn]
+  bucket_access = [aws_cloudfront_origin_access_identity.this.iam_arn]
 }
 
-# TODO: esto puede ir en modulo de s3
+
+# TODO: move this to s3 module
 resource "aws_s3_object" "data" {
   bucket = module.web_site.bucket_id
   key    = "index.html"
   source = "./index.html"
-  #etag         = filemd5("${var.src}/${each.value.file}")
-  #content_type = each.value.mime
   content_type = "text/html"
 }
 
