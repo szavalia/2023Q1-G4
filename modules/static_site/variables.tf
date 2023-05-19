@@ -1,7 +1,7 @@
 # FIXME: maybe just "name"
 variable "bucket_name" {
-    description = "The OG bucket"
-    type = string
+  description = "Name of the bucket"
+  type        = string
 }
 
 variable "www_bucket_access" {
