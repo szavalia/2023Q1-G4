@@ -1,6 +1,6 @@
 module "logs" {
   source        = "terraform-aws-modules/s3-bucket/aws"
-  bucket_prefix = local.logs_bucket
+  bucket        = local.logs_bucket
   acl           = "log-delivery-write"
 
   force_destroy = true
@@ -11,10 +11,10 @@ module "logs" {
   control_object_ownership = true
   object_ownership         = "ObjectWriter"
   # TODO: maybe encrypt
-
+  # TODO: is it private?
 }
 
-/*
+
 module "www" {
   source        = "terraform-aws-modules/s3-bucket/aws"
   bucket        = local.www_bucket
@@ -31,18 +31,21 @@ module "www" {
 
   website = {
     redirect_all_requests_to = {
-      host_name = module.static_site.s3_bucket_website_endpoint
+      #host_name = module.static_site.s3_bucket_website_endpoint
+      host_name = module.static_site.s3_bucket_bucket_regional_domain_name
     }
   }
 }
-*/
+
 
 module "static_site" {
   source        = "terraform-aws-modules/s3-bucket/aws"
   bucket        = var.bucket_name
-  attach_policy = true
-  policy        = data.aws_iam_policy_document.site.json
+  #attach_policy = true
+  #policy        = data.aws_iam_policy_document.site.json
 
+  acl = "public-read"
+  /*
   acl                      = "private"
   control_object_ownership = true
   object_ownership         = "ObjectWriter"
@@ -50,6 +53,7 @@ module "static_site" {
   block_public_policy      = true
   ignore_public_acls       = true
   restrict_public_buckets  = true
+  */
 
   logging = {
     target_bucket = module.logs.s3_bucket_id

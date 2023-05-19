@@ -1,3 +1,4 @@
+/**
 module "api_gw" {
   source            = "./modules/api_gw"
   rest_api_desc     = "API gateway for the lambdas"
@@ -7,6 +8,7 @@ module "api_gw" {
   lambda_func_arn  = "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:123456789012:function:dummy-lambda/invocations"
   lambda_func_name = "example-lambda"
 }
+*/
 
 # TODO: decidir entre esto y origin access control
 resource "aws_cloudfront_origin_access_identity" "this" {
@@ -53,5 +55,6 @@ resource "aws_s3_object" "data" {
   source = "./index.html"
   #etag         = filemd5("${var.src}/${each.value.file}")
   #content_type = each.value.mime
+  content_type = "text/html"
 }
 

@@ -1,7 +1,9 @@
+# TODO: ver si se puede en un for each
+
 data "aws_iam_policy_document" "www" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::${local.www_bucket}/*"]
+    resources = ["arn:aws:s3:::${local.www_bucket}" ,"arn:aws:s3:::${local.www_bucket}/*"]
 
     principals {
       type        = "AWS"
@@ -35,7 +37,7 @@ data "aws_iam_policy_document" "site" {
 data "aws_iam_policy_document" "site" {
   statement {
     actions   = ["s3:GetObject"]
-    resources = ["arn:aws:s3:::${var.bucket_name}/*"]
+    resources = ["arn:aws:s3:::${var.bucket_name}" ,"arn:aws:s3:::${var.bucket_name}/*"]
 
     principals {
       type        = "AWS"
