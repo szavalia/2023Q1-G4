@@ -18,12 +18,16 @@ Para ejecutar el comando de terraform que crea la infraestructura se debe ejecut
 
 ```bash
 terraform init
-terraform apply
+terraform apply -var-file=config.tfvars -auto-approve 
 ```
 
 ## Módulos
 
-- [x] VPC
-- [ ] Lambda
-- [ ] Bucket S3
-- [ ] CloudFront
+- VPC
+- Lambda
+- Bucket S3
+- CloudFront
+- API Gateway
+- DNS
+  - Route53
+  - ACM

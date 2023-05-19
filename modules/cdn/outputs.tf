@@ -1,3 +1,9 @@
 output "endpoint_id" {
-  value = aws_cloudfront_distribution.this.domain_name
+  description = "ID of the Cloudfront distribution"
+  value       = aws_cloudfront_distribution.this.domain_name
+}
+
+output "cloudfront_distribution" {
+  description = "Cloudfront distribution"
+  value       = aws_cloudfront_distribution.this
 }
